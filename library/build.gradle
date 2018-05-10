@@ -12,11 +12,20 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
+    lintOptions {
+        abortOnError false
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
 }
 
@@ -29,7 +38,11 @@ dependencies {
     api 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:1.0.2'
     testImplementation 'junit:junit:4.12'
 }
-
+// Required because retrolambda is on maven central
+repositories {
+    mavenCentral()
+    google()
+}
 /*jcenter*/
 allprojects {
     tasks.withType(Javadoc) {
@@ -52,7 +65,7 @@ publish {//lucifer add
 //    groupId = rootProject.groupId
 //    uploadName = rootProject.uploadName
 //    publishVersion = rootProject.publishVersion
-//    desc = 'https://github.com/ico10297024/IcoBle'
+//    desc = 'https://github.com/ico10297024/IcoPay'
 //    website = rootProject.website
 //    licences = rootProject.licences
 }

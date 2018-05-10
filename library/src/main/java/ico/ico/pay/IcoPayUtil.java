@@ -13,7 +13,6 @@ import net.sourceforge.simcpux.WXPayUtil;
  * 目前整合了支付宝.微信.银联 三种支付方式
  * 由于不同支付方式回调方式不同,为了统一一律采用广播形式
  * 目前广播已支持了支付宝2.0和微信
- *
  */
 public class IcoPayUtil {
     private static AlipayUtil alipayUtil;
@@ -37,6 +36,8 @@ public class IcoPayUtil {
 
     /**
      * 初始化支付宝2.0sdk环境
+     *
+     * @param context 当前上下文,推荐使用{@link android.app.Application}
      */
     public static void initAlipay2Util(Context context) {
         if (alipay2Util == null) {
@@ -47,8 +48,8 @@ public class IcoPayUtil {
     /**
      * 初始化微信sdk环境
      *
-     * @param context
-     * @param appId
+     * @param context 当前上下文,推荐使用{@link android.app.Application}
+     * @param appId   微信的appId
      */
     public static void initWXUtil(Context context, String appId) {
         if (wxPayUtil == null) {
@@ -68,7 +69,7 @@ public class IcoPayUtil {
     /**
      * 支付宝平台util
      *
-     * @return
+     * @return {@link AlipayUtil}
      */
     public static AlipayUtil getAlipayUtil() {
         return alipayUtil;
@@ -77,27 +78,25 @@ public class IcoPayUtil {
     /**
      * 支付宝2.0平台util
      *
-     * @return
+     * @return {@link Alipay2Util}
      */
     public static Alipay2Util getAlipay2Util() {
         return alipay2Util;
     }
 
-
     /**
      * 微信平台util
      *
-     * @return
+     * @return {@link WXPayUtil}
      */
     public static WXPayUtil getWxPayUtil() {
         return wxPayUtil;
     }
 
-
     /**
      * 银联平台util
      *
-     * @return
+     * @return {@link UnionPayUtil}
      */
     public static UnionPayUtil getUnionPayUtil() {
         return unionPayUtil;

@@ -36,7 +36,6 @@ public class UnionPayUtil {
         UPPayAssistEx.startPay(context, "", "", tn, mMode);
     }
 
-
     protected void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         /*************************************************
          * 步骤3：处理银联手机支付控件返回的支付结果

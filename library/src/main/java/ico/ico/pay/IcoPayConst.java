@@ -46,6 +46,11 @@ public class IcoPayConst {
      * 支付成功
      */
     public final static int PR_SUCCESS = 2;
+    /**
+     * 未知的支付结果
+     * 支付宝说明:支付结果因为支付渠道原因或者系统原因还在等待支付结果确认，最终交易是否成功以服务端异步通知为准（小概率状态）
+     */
+    public final static int PR_UNKNOWN = 3;
 
     /**
      * 微信支付

@@ -1,11 +1,7 @@
 package com.alipay.sdk.pay2;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -13,9 +9,10 @@ import android.util.Log;
 import com.alipay.sdk.app.EnvUtils;
 import com.alipay.sdk.app.PayTask;
 import com.alipay.sdk.pay2.util.OrderInfoUtil2_0;
-import ico.ico.pay.IcoPayConst;
 
 import java.util.Map;
+
+import ico.ico.pay.IcoPayConst;
 
 /**
  * 重要说明:
@@ -25,17 +22,13 @@ import java.util.Map;
  * 防止商户私密数据泄露，造成不必要的资金损失，及面临各种安全风险；
  */
 public class Alipay2Util {
-    public static final int SDK_PAY_FLAG = 1;
-    public static final int SDK_AUTH_FLAG = 2;
-    Context mContext;
-    PayHandler mPayHandler;
+    static final int SDK_PAY_FLAG = 1;
+    static final int SDK_AUTH_FLAG = 2;
 
     /**
      * 初始化支付宝支付2.0sdk环境
      */
-    public Alipay2Util(Context context) {
-        mContext = context;
-        mPayHandler = new PayHandler(mContext.getMainLooper());
+    public Alipay2Util() {
     }
 
     /**
@@ -76,10 +69,7 @@ public class Alipay2Util {
                 Map<String, String> result = alipay.payV2(orderInfo, true);
                 Log.i("msp", result.toString());
 
-                Message msg = new Message();
-                msg.what = SDK_PAY_FLAG;
-                msg.obj = result;
-                mPayHandler.sendMessage(msg);
+                handlePayResult(activity, SDK_PAY_FLAG, new PayResult(result));
             }
         };
 
@@ -100,10 +90,7 @@ public class Alipay2Util {
                 Map<String, String> result = alipay.payV2(orderInfo, true);
                 Log.i("msp", result.toString());
 
-                Message msg = new Message();
-                msg.what = SDK_PAY_FLAG;
-                msg.obj = result;
-                mPayHandler.sendMessage(msg);
+                handlePayResult(activity, SDK_PAY_FLAG, new PayResult(result));
             }
         };
 
@@ -112,55 +99,38 @@ public class Alipay2Util {
     }
 
     /**
-     * get the sdk version. 获取SDK版本号
+     * 处理支付结果,发送广播
      */
-    public String getSDKVersion(Activity activity) {
-        PayTask payTask = new PayTask(activity);
-        String version = payTask.getVersion();
-        return version;
-    }
+    private void handlePayResult(Activity activity, int flag, PayResult payResult) {
+        switch (flag) {
+            case SDK_PAY_FLAG: {
+                /**
+                 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                 */
+                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                int resultStatus = Integer.valueOf(payResult.getResultStatus());
 
-    public void enableSandbox() {
-        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
-    }
-
-    @SuppressLint("HandlerLeak")
-    class PayHandler extends Handler {
-        public PayHandler(Looper looper) {
-            super(looper);
-        }
-
-        @SuppressWarnings("unused")
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case SDK_PAY_FLAG: {
-                    @SuppressWarnings("unchecked")
-                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
-                    /**
-                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
-                     */
-                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
-                    int resultStatus = Integer.valueOf(payResult.getResultStatus());
-
-                    Intent intentBroadcast = new Intent(IcoPayConst.ACTION_PAY_RESULT);
-                    intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_PLATFORM, IcoPayConst.PP_ALIPAY);
-                    switch (resultStatus) {
-                        case 9000:
-                            intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_SUCCESS);
-                            break;
-                        case 6001:
-                            intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_CANCEL);
-                            break;
-                        default:
-                            intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_FAIL);
-                            // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
-                            break;
-                    }
-                    intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_MESSAGE, resultInfo);
-                    intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_STATUS, resultStatus);
-                    mContext.sendBroadcast(intentBroadcast);
-                    break;
+                Intent intentBroadcast = new Intent(IcoPayConst.ACTION_PAY_RESULT);
+                intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_PLATFORM, IcoPayConst.PP_ALIPAY);
+                switch (resultStatus) {
+                    case 9000:
+                        intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_SUCCESS);
+                        break;
+                    case 6001:
+                        intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_CANCEL);
+                        break;
+                    case 8000:
+                        intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_UNKNOWN);
+                        break;
+                    default:
+                        intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_RESULT, IcoPayConst.PR_FAIL);
+                        break;
                 }
+                intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_MESSAGE, resultInfo);
+                intentBroadcast.putExtra(IcoPayConst.EXTRA_PAY_STATUS, resultStatus);
+                activity.sendBroadcast(intentBroadcast);
+                break;
+            }
 //                case SDK_AUTH_FLAG: {
 //                    @SuppressWarnings("unchecked")
 //                    AuthResult authResult = new AuthResult((Map<String, String>) msg.obj, true);
@@ -182,10 +152,21 @@ public class Alipay2Util {
 //                    }
 //                    break;
 //                }
-                default:
-                    break;
-            }
+            default:
+                break;
         }
     }
 
+    /**
+     * get the sdk version. 获取SDK版本号
+     */
+    public String getSDKVersion(Activity activity) {
+        PayTask payTask = new PayTask(activity);
+        String version = payTask.getVersion();
+        return version;
+    }
+
+    public void enableSandbox() {
+        EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+    }
 }

@@ -36,12 +36,10 @@ public class IcoPayUtil {
 
     /**
      * 初始化支付宝2.0sdk环境
-     *
-     * @param context 当前上下文,推荐使用{@link android.app.Application}
      */
-    public static void initAlipay2Util(Context context) {
+    public static void initAlipay2Util() {
         if (alipay2Util == null) {
-            alipay2Util = new Alipay2Util(context);
+            alipay2Util = new Alipay2Util();
         }
     }
 
@@ -49,7 +47,7 @@ public class IcoPayUtil {
      * 初始化微信sdk环境
      *
      * @param context 当前上下文,推荐使用{@link android.app.Application}
-     * @param appId   微信的appId
+     * @param appId   应用的appId
      */
     public static void initWXUtil(Context context, String appId) {
         if (wxPayUtil == null) {

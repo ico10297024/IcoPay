@@ -3,8 +3,30 @@
 
 支持:支付宝/微信/银联(银联有段时间没用了,目前版本不确定是否还能使用)
 
-# 调用方式
-## 1  在第三方支付平台获取应用唯标识,比如appId等
+# 引入方式
+## Gradle
+```
+compile 'ico.ico.pay:IcoPay:1.0.0'
+```
+## Maven
+```
+<dependency>
+  <groupId>ico.ico.pay</groupId>
+  <artifactId>IcoPay</artifactId>
+  <version>1.0.0</version>
+  <type>pom</type>
+</dependency>
+```
+## lvy
+```
+<dependency org='ico.ico.pay' name='IcoPay' rev='1.0.0'>
+  <artifact name='IcoPay' ext='pom' ></artifact>
+</dependency>
+```
+
+
+# 使用方式
+## 1  在第三方支付平台获取应用唯一标识,比如appId等
 
 ## 2  配置你的AndroidManifest.xml
 ### 2.1 支付宝

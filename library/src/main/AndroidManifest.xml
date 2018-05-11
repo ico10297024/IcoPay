@@ -41,7 +41,6 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
         <!--</editor-fold>-->
 
-
         <!--<editor-fold desc="支付宝">-->
         <!--未安装支付宝时使用h5进行支付-->
         <activity

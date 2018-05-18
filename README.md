@@ -4,16 +4,6 @@
 支持:支付宝/微信/银联(银联有段时间没用了,目前版本不确定是否还能使用)
 
 # 引入方式
-目前还在审核中,可以先在资源目录中加入我的maven地址,就可以download到了
-```
-allprojects {
-    repositories {
-        maven { url "https://dl.bintray.com/ico10297024/maven/" }
-        jcenter()
-    }
-}
-```
-
 ## Gradle
 ```
 compile 'ico.ico.pay:IcoPay:1.0.0'

@@ -27,8 +27,8 @@
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="wx80c419c4f7a49583" />
+                <!--这个标签加不加暂时没有发现区别-->
+                <!--<data android:scheme="wx80c419c4f7a49583" />-->
             </intent-filter>
         </activity>
         <!--</editor-fold>-->

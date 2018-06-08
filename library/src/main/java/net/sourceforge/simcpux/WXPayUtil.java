@@ -33,6 +33,7 @@ public class WXPayUtil {
     public static final String PARAM_PREPAYID = "prepayid";
     public static final String PARAM_TIMESTAMP = "timestamp";
     public IWXAPI msgApi;
+    private String mAppid;
 
     /**
      * 初始化微信支付环境
@@ -41,12 +42,22 @@ public class WXPayUtil {
      * @param appId   应用的appId
      */
     public WXPayUtil(Context context, String appId) {
-        msgApi = WXAPIFactory.createWXAPI(context, appId, false);
+        this.mAppid = appId;
+        msgApi = WXAPIFactory.createWXAPI(context, mAppid, false);
         // 将该app注册到微信
-        boolean reg = msgApi.registerApp(appId);
-        Log.w("ico_srpay", "WXPayUtil: " + reg);
+        registerApp();
     }
 
+    /**
+     * 注册app
+     *
+     * @return
+     */
+    public boolean registerApp() {
+        boolean reg = msgApi.registerApp(mAppid);
+        Log.w("ico_WXPayUtil_registerApp", mAppid + "==" + reg);
+        return reg;
+    }
 
     /**
      * 检查当前安装的微信版本是否支持支付
@@ -69,7 +80,6 @@ public class WXPayUtil {
     /**
      * 发起微信支付
      *
-     * @param appid     应用的appId
      * @param noncestr  随机字符串,不长于32位
      * @param partnerid 微信支付分配的商户号
      * @param prepayid  微信返回的预支付交易回话ID
@@ -77,9 +87,9 @@ public class WXPayUtil {
      * @param sign      签名,可以通过{@link #genAppSign(String, String, String, String, String, String)} 进行签名
      * @return
      */
-    public boolean pay(String appid, String noncestr, String partnerid, String prepayid, String timestamp, String sign) {
+    public boolean pay(String noncestr, String partnerid, String prepayid, String timestamp, String sign) {
         PayReq req = new PayReq();
-        req.appId = appid;
+        req.appId = mAppid;
         req.nonceStr = noncestr;
         req.packageValue = "Sign=WXPay";
         req.partnerId = partnerid;
@@ -116,7 +126,7 @@ public class WXPayUtil {
      * 微信支付签名算法sign
      *
      * @param characterEncoding 编码方式,一般使用"UTF-8"
-     * @param parameters 参数集
+     * @param parameters        参数集
      * @return
      */
     @SuppressWarnings("unchecked")
@@ -143,7 +153,7 @@ public class WXPayUtil {
      * 需要在微信的结果页面{@link ico.ico.pay.wxapi.WXPayEntryActivity}中调用来处理
      * onCreate、onNewIntent
      *
-     * @param intent 在结果页面{@link ico.ico.pay.wxapi.WXPayEntryActivity} 可以通过{@link Activity#getIntent()},或者通过函数给定的参数获取
+     * @param intent  在结果页面{@link ico.ico.pay.wxapi.WXPayEntryActivity} 可以通过{@link Activity#getIntent()},或者通过函数给定的参数获取
      * @param handler 用来接收微信的回调
      * @return
      */

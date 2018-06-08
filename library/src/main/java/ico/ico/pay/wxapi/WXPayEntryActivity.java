@@ -5,11 +5,12 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
-import ico.ico.pay.IcoPayConst;
-import ico.ico.pay.IcoPayUtil;
 import com.tencent.mm.opensdk.modelbase.BaseReq;
 import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+
+import ico.ico.pay.IcoPayConst;
+import ico.ico.pay.IcoPayUtil;
 
 /**
  * 将此类拷贝到app包
@@ -25,14 +26,14 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
         //这里的APP_ID传入正确的值
 //        SRWXPayUtil = new SRWXPayUtil(this,APP_ID);
-        IcoPayUtil.getWxPayUtil().handleResponseIntent(getIntent(), this);
+        IcoPayUtil.getWxPayUtil(this, getPackageName()).handleResponseIntent(getIntent(), this);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         setIntent(intent);
-        IcoPayUtil.getWxPayUtil().handleResponseIntent(getIntent(), this);
+        IcoPayUtil.getWxPayUtil(this, getPackageName()).handleResponseIntent(getIntent(), this);
     }
 
     @Override

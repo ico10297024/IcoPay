@@ -103,32 +103,25 @@ compile 'ico.ico.pay:IcoPay:1.0.1'
 <!--</editor-fold>-->
 ```
 
-## 3  初始化支付环境
+## 3  初始化支付环境 and 获取对应支付平台的util
+1.0.1将初始化支付环境和获取对应支付平台的util整合为一个函数,全部通过get系列函数进行初始化和获取
 ```
 //支付宝1.0,前台进行签名,所以一些商户参数都写在前台
-IcoPayUtil.initAlipayUtil(partner, seller, rsa_private, rsa_public);
-//支付宝2.0
-IcoPayUtil.initAlipay2Util();
-//微信
-IcoPayUtil.initWXUtil(context,appid);
-//银联
-IcoPayUtil.initUnionPayUtil();
-```
-## 4  获取对应支付平台的util
-```
 IcoPayUtil.getAlipayUtil();
+//支付宝2.0
 IcoPayUtil.getAlipay2Util();
+//微信
 IcoPayUtil.getWxPayUtil();
+//银联
 IcoPayUtil.getUnionPayUtil();
 ```
-## 5  进行支付
+## 4  进行支付
 ```
-IcoPayUtil.getAlipayUtil().pay(Activity activity, String outTradeNo, String subject, String body, String price, String callbackUrl);
+IcoPayUtil.getAlipayUtil().pay();
 
-IcoPayUtil.getAlipay2Util().payV2(Activity activity, String appid, String rsa_private, String rsa2_private, String orderNo, String amount, String subject, String body);
-IcoPayUtil.getAlipay2Util().payV2(Activity activity, String orderInfo);
+IcoPayUtil.getAlipay2Util().payV2();
 
-IcoPayUtil.getWxPayUtil().pay(String appid, String noncestr, String partnerid, String prepayid, String timestamp, String sign);
-IcoPayUtil.getUnionPayUtil().pay(Context context, String tn);
+IcoPayUtil.getWxPayUtil().pay();
+IcoPayUtil.getUnionPayUtil().pay();
 ```
 ***注:支付宝2.0有两个支付函数,他们区别在于一种是在前端签名构造字符串,一种是服务器端签名构造字符串***

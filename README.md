@@ -6,20 +6,20 @@
 # 引入方式
 ## Gradle
 ```
-compile 'ico.ico.pay:IcoPay:1.0.0'
+compile 'ico.ico.pay:IcoPay:1.0.1'
 ```
 ## Maven
 ```
 <dependency>
   <groupId>ico.ico.pay</groupId>
   <artifactId>IcoPay</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <type>pom</type>
 </dependency>
 ```
 ## lvy
 ```
-<dependency org='ico.ico.pay' name='IcoPay' rev='1.0.0'>
+<dependency org='ico.ico.pay' name='IcoPay' rev='1.0.1'>
   <artifact name='IcoPay' ext='pom' ></artifact>
 </dependency>
 ```
